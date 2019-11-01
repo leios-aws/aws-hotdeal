@@ -151,8 +151,13 @@ var requestListPage = function (result, callback) {
                 if (item.price < 88000) {
                     return null;
                 }
-                if (item.price > 101000) {
+                if (item.price > 201000) {
                     return null;
+                }
+                for (var i = 0; i < ignoreProducts.length; i++) {
+                    if (item.title.indexOf(ignoreProducts[i]) > -1) {
+                        return null;
+                    }
                 }
                 // 판매 종료
                 if (body.html.indexOf('btn_buy_end') > -1) {
@@ -229,6 +234,12 @@ var traceProducts = [
     "도서문화상품권",
     "롯데",
     "신세계",
+];
+
+var ignoreProducts = [
+    "정관장",
+    "아이템매니아",
+    "예스24",
 ];
 
 var lowestPrices;
