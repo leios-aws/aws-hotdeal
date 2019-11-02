@@ -5,6 +5,17 @@ const async = require('async');
 
 var now;
 
+var ignoreProducts = [
+    "정관장",
+    "아이템매니아",
+    "예스24",
+    "엔터식스",
+    "대한문고 교환권",
+    "CGV기프트카드",
+    "(롯데마트)",
+    "(하이마트)",
+];
+
 var req = request.defaults({
     headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
@@ -218,16 +229,6 @@ var parseItem = function (item, callback) {
         callback(err);
     });
 };
-
-var ignoreProducts = [
-    "정관장",
-    "아이템매니아",
-    "예스24",
-    "엔터식스",
-    "대한문고 교환권",
-    "CGV기프트카드",
-];
-
 
 exports.process = function (main_result, callback) {
     now = Math.floor(Date.now() / 1000);
