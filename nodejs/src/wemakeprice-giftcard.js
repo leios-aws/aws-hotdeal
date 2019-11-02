@@ -153,9 +153,6 @@ var requestListPage = function (result, callback) {
                 if (item.price < 88000) {
                     return null;
                 }
-                if (item.price > 201000) {
-                    return null;
-                }
                 for (var i = 0; i < ignoreProducts.length; i++) {
                     if (item.title.indexOf(ignoreProducts[i]) > -1) {
                         return null;

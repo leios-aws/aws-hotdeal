@@ -84,9 +84,6 @@ var requestListPage = function (result, callback) {
                     if (convert.price < 88000) {
                         return false;
                     }
-                    if (convert.price > 201000) {
-                        return false;
-                    }
                     for (var i = 0; i < ignoreProducts.length; i++) {
                         if (convert.title.indexOf(ignoreProducts[i]) > -1) {
                             return false;
