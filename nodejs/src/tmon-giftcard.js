@@ -5,6 +5,18 @@ const async = require('async');
 
 var now;
 
+var ignoreProducts = [
+    "아이템베이",
+    "이랜드상품권",
+    "골프문화상품권",
+    "파리크라상",
+    "신세계면세점",
+    "SPC 해피상품권",
+    "컬쳐랜드 지류",
+    "LG U+ 데이터",
+    "지류상품권",
+];
+
 var req = request.defaults({
     headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
@@ -96,18 +108,6 @@ var requestListPage = function (result, callback) {
         callback(err, result);
     });
 };
-
-var ignoreProducts = [
-    "아이템베이",
-    "이랜드상품권",
-    "골프문화상품권",
-    "파리크라상",
-    "신세계면세점",
-    "SPC 해피상품권",
-    "컬쳐랜드 지류",
-    "LG U+ 데이터",
-    "지류상품권",
-];
 
 exports.process = function (main_result, callback) {
     now = Math.floor(Date.now() / 1000);
