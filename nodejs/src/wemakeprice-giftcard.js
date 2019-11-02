@@ -240,6 +240,8 @@ var ignoreProducts = [
     "정관장",
     "아이템매니아",
     "예스24",
+    "엔터식스",
+    "대한문고 교환권",
 ];
 
 var lowestPrices;
