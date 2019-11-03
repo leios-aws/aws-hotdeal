@@ -123,6 +123,7 @@ var requestListPage = function (result, callback) {
         method: 'GET',
         json: true,
         qs: {
+            r_cnt: 100
         }
     };
 
