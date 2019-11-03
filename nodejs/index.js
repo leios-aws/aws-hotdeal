@@ -214,7 +214,7 @@ var processItem = function (result, saved, item, callback) {
                 console.log(`New lowest price ${item.title} => ${item.lowestPrice}`);
                 result.message += `[가격 변동]\n`;
                 result.message += `품명: ${item.title}\n`;
-                result.message += `가격: ${item.lowestPrice}\n(주: ${lowPrices._007d_price} 월: ${lowPrices._030d_price}\n년: ${lowPrices._365d_price})\n`;
+                result.message += `가격: ${found.lowestPrice} => ${item.lowestPrice}\n(주: ${lowPrices._007d_price} 월: ${lowPrices._030d_price}\n년: ${lowPrices._365d_price})\n`;
                 result.message += `URL: ${item.url}\n`;
                 result.message += `\n`;
             }
