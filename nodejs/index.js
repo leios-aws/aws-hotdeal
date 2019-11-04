@@ -187,6 +187,16 @@ var updateStatistics = function (productId, lowestPrice, callback) {
     });
 };
 
+var diffCommaNumber = function(num1, num2) {
+    if (num1 > num2) {
+        return `+${commaNumber(num1 - num2)}`;
+    } else if (num1 < num2) {
+        return `-${commaNumber(num2 - num1)}`;
+    } else {
+        return "0";
+    }
+}
+
 var processItem = function (result, saved, item, callback) {
     console.log(`신규 상품 확인 ${item.title} : ${item.url}, ${item.lowestPrice}`);
 
@@ -206,7 +216,7 @@ var processItem = function (result, saved, item, callback) {
             console.log(`New item ${item.title}`);
             result.message += `[신규 상품 등록]\n`;
             result.message += `품명: ${item.title}\n`;
-            result.message += `가격: ${commaNumber(item.lowestPrice)}\n(주: ${commaNumber(item.lowestPrice - lowPrices._007d_price)} 월: ${commaNumber(item.lowestPrice - lowPrices._030d_price)} 년: ${commaNumber(item.lowestPrice - lowPrices._365d_price)})\n`;
+            result.message += `가격: ${commaNumber(item.lowestPrice)}\n(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
             result.message += `URL: ${item.url}\n`
             result.message += `\n`;
         } else {
@@ -215,7 +225,7 @@ var processItem = function (result, saved, item, callback) {
                 console.log(`New lowest price ${item.title} => ${item.lowestPrice}`);
                 result.message += `[가격 변동]\n`;
                 result.message += `품명: ${item.title}\n`;
-                result.message += `가격: ${commaNumber(item.lowestPrice)} (${commaNumber(item.lowestPrice - found.lowestPrice)})\n(주: ${commaNumber(item.lowestPrice - lowPrices._007d_price)} 월: ${commaNumber(item.lowestPrice - lowPrices._030d_price)} 년: ${commaNumber(item.lowestPrice - lowPrices._365d_price)})\n`;
+                result.message += `가격: ${commaNumber(item.lowestPrice)} (${diffCommaNumber(item.lowestPrice, found.lowestPrice)})\n(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
                 result.message += `URL: ${item.url}\n`;
                 result.message += `\n`;
             }
