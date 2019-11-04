@@ -4,6 +4,7 @@ const wemakeprice_giftcard = require('./src/wemakeprice-giftcard.js');
 const tmon_giftcard = require('./src/tmon-giftcard.js');
 const config = require('config');
 const AWS = require('aws-sdk');
+const commaNumber = require('comma-number');
 
 AWS.config.update({
     region: 'ap-northeast-2',
@@ -205,7 +206,7 @@ var processItem = function (result, saved, item, callback) {
             console.log(`New item ${item.title}`);
             result.message += `[신규 상품 등록]\n`;
             result.message += `품명: ${item.title}\n`;
-            result.message += `가격: ${item.lowestPrice}\n(주: ${lowPrices._007d_price} 월: ${lowPrices._030d_price}\n년: ${lowPrices._365d_price})\n`;
+            result.message += `가격: ${commaNumber(item.lowestPrice)}\n(주: ${commaNumber(item.lowestPrice - lowPrices._007d_price)} 월: ${commaNumber(item.lowestPrice - lowPrices._030d_price)} 년: ${commaNumber(item.lowestPrice - lowPrices._365d_price)})\n`;
             result.message += `URL: ${item.url}\n`
             result.message += `\n`;
         } else {
@@ -214,7 +215,7 @@ var processItem = function (result, saved, item, callback) {
                 console.log(`New lowest price ${item.title} => ${item.lowestPrice}`);
                 result.message += `[가격 변동]\n`;
                 result.message += `품명: ${item.title}\n`;
-                result.message += `가격: ${found.lowestPrice} => ${item.lowestPrice}\n(주: ${lowPrices._007d_price} 월: ${lowPrices._030d_price}\n년: ${lowPrices._365d_price})\n`;
+                result.message += `가격: ${commaNumber(item.lowestPrice)} (${commaNumber(item.lowestPrice - found.lowestPrice)})\n(주: ${commaNumber(item.lowestPrice - lowPrices._007d_price)} 월: ${commaNumber(item.lowestPrice - lowPrices._030d_price)} 년: ${commaNumber(item.lowestPrice - lowPrices._365d_price)})\n`;
                 result.message += `URL: ${item.url}\n`;
                 result.message += `\n`;
             }
@@ -264,7 +265,7 @@ var makeReport = function (result, callback) {
                             console.log(`Soldout item ${item.title}`);
                             result.message += `[판매 중지]\n`;
                             result.message += `품명: ${item.title}\n`;
-                            result.message += `가격: ${item.lowestPrice}\n`;
+                            result.message += `가격: ${commaNumber(item.lowestPrice)}\n`;
                             result.message += `URL: ${item.url}\n`;
                             result.message += `\n`;
                         }
