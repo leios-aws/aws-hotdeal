@@ -30,7 +30,26 @@ var req = request.defaults({
     //encoding: null
 });
 
+var requestDelay = function(result, callback) {
+    if (result.data.items.length > 0) {
+        console.log("Skip retry...");
+        callback(null, result);
+        return;
+    }
+
+    setTimeout(function() {
+        console.log("Delayed retry...");
+        callback(null, result);
+        return;
+    }, 1000);
+}
+
 var requestListPage = function (result, callback) {
+    if (result.data.items.length > 0) {
+        console.log("Skip retry...");
+        callback(null, result);
+        return;
+    }
     var option = {
         uri: 'http://www.tmon.co.kr/api/direct/v1/categorylistapi/api/strategy/filter/68090000/deals',
         method: 'GET',
@@ -46,9 +65,6 @@ var requestListPage = function (result, callback) {
         result.response = response;
         result.body = body;
 
-        /*
-        <li class="item sold_out" data-d="C70E9749F43EAAAD99D4EF6C1C6AF865" data-e="F3189C3B32D6EE8E397001F2362770DE" data-maincategoryno="68090001">                    <a href="http://www.tmon.co.kr/deal/2652722802" class="anchor" tl:area="DLDRC" tl:ord="1" target="_blank">                    <div class="border">                <div class="fig">                    <div class="thumb">                        <img src="//img2.tmon.kr/cdn3/deals/2019/11/01/2652722802/2652722802_catlist_3col_v2_b62fd_1572606891production.jpg" alt="[티몬111111] 티몬블랙딜 PAYCO 상품권 2% 할인" onerror="$(this).hide().closest('.fig').find('.sticker:first').hide()">                    </div>                                                                                                    <div class="mask sold_out">                        <div class="mask_bg"></div>                        <div class="mask_info">                                                          <span class="text">매진</span>                                                   </div>                    </div>                </div>                <div class="info">                                                            <p class="deal_list_promotion_title">PAYCO 상품권 2% 할인</p>                    <p class="title_name">[티몬111111] 티몬블랙딜 PAYCO 상품권 2% 할인</p>                                        <div class="price_area">                                                                                                                       <strong class="type">균일가</strong>                                    <span class="price">                                                                                <span class="price">                                           <span class="blind">판매가:</span>                                           <i class="num">98,000</i>원                                        </span>                                    </span>                                                                                                                                    <p class="price_desc">페이코상품권 10만원권</p>                                            </div>                    <div class="label_area">                                                                                                            <span class="label label_TIME">오늘만</span>                                                                                                                <span class="label label_CONV">바로사용</span>                                                                        </div>                                        <button type="button" class="btn_favorite"><span class="blind">찜하기</span></button>                </div>                            </div>        </a>    </li>
-        */
         console.log("Parsing Item List");
         if (!err) {
             if (body && body.data && body.data.items) {
@@ -118,6 +134,10 @@ exports.process = function (main_result, callback) {
                 message: "",
             });
         },
+        requestListPage,
+        requestDelay,
+        requestListPage,
+        requestDelay,
         requestListPage,
     ], function (err, result) {
         if (err) {
