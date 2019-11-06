@@ -37,6 +37,7 @@ var traceProducts = [
     "도서문화상품권",
     "롯데",
     "신세계",
+    "머니트리",
 ];
 
 var getProductId = function (item) {
