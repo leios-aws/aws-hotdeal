@@ -251,6 +251,10 @@ var makeReport = function (result, callback) {
 
     result.data.items = [].concat(result.tmon, result.wemakeprice);
 
+    result.data.items = result.data.items.filter(function(item) {
+        return item.alive > 0;
+    });
+
     console.log("Making Report");
     docClient.query(queryParams, (err, res) => {
         if (!err) {
@@ -258,7 +262,17 @@ var makeReport = function (result, callback) {
             if (res.Items.length > 0 && res.Items[0].data) {
                 saved = res.Items[0].data;
             }
+            saved.items = saved.items.filter(function(item) {
+                return item.alive > 0;
+            });
             async.series([
+                function (callback) {
+                    async.eachSeries(result.data.items, (item, callback) => {
+                        processItem(result, saved, item, callback);
+                    }, function (err) {
+                        callback(err);
+                    });
+                },
                 function (callback) {
                     async.each(saved.items, (item, callback) => {
                         console.log(`기존 상품 확인: ${item.title} : ${item.url} ${item.lowestPrice}`);
@@ -273,21 +287,26 @@ var makeReport = function (result, callback) {
                         }, null);
 
                         if (!found) {
-                            console.log(`Soldout item ${item.title}`);
-                            result.message += `[판매 중지]\n`;
-                            result.message += `품명: ${item.title}\n`;
-                            result.message += `가격: ${commaNumber(item.lowestPrice)}\n`;
-                            result.message += `URL: ${item.url}\n`;
-                            result.message += `\n`;
+                            if (item.alive === 0) {
+                                console.log(`Soldout item ${item.title}`);
+                                result.message += `[판매 중지]\n`;
+                                result.message += `품명: ${item.title}\n`;
+                                result.message += `가격: ${commaNumber(item.lowestPrice)}\n`;
+                                result.message += `URL: ${item.url}\n`;
+                                result.message += `\n`;
+                            } else {
+                                console.log(`Soldout item ${item.title}`);
+                                result.message += `[삭제 대기] ${item.alive}\n`;
+                                result.message += `품명: ${item.title}\n`;
+                                result.message += `가격: ${commaNumber(item.lowestPrice)}\n`;
+                                result.message += `URL: ${item.url}\n`;
+                                result.message += `\n`;
+
+                                item.alive--;
+                                result.data.push(item);
+                            }
                         }
                         callback(null);
-                    }, function (err) {
-                        callback(err);
-                    });
-                },
-                function (callback) {
-                    async.eachSeries(result.data.items, (item, callback) => {
-                        processItem(result, saved, item, callback);
                     }, function (err) {
                         callback(err);
                     });

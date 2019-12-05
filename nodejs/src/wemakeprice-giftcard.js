@@ -137,6 +137,8 @@ var requestListPage = function (result, callback) {
             result.data.items = $('li').map((index, element) => {
                 var item = {};
 
+                item.alive = 3;
+
                 var href = $("span.type03 > a", element).attr('href').split('?')[0];
                 if (href.startsWith('http')) {
                     item.url = href;
@@ -161,11 +163,11 @@ var requestListPage = function (result, callback) {
                 }
                 // 판매 종료
                 if (body.html.indexOf('btn_buy_end') > -1) {
-                    return null;
+                    item.alive = 0;
                 }
                 // 매진
                 if (body.html.indexOf('btn_soldout2') > -1) {
-                    return null;
+                    item.alive = 0;
                 }
                 return item;
             }).get();

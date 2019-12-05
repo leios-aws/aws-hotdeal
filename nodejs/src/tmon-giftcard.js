@@ -82,6 +82,7 @@ var requestListPage = function (result, callback) {
 
                     convert.price = item.priceInfo.price;
                     convert.lowestPrice = convert.price;
+                    convert.alive = 3;
 
                     if (item.discountPrice) {
                         if (convert.lowestPrice > item.discountPrice.price) {
@@ -107,7 +108,7 @@ var requestListPage = function (result, callback) {
                     }
                     // 판매 종료
                     if (item.isClosed || item.isPause || (item.dealMax && item.dealMax.soldOut)) {
-                        return false;
+                        convert.alive = 0;
                     }
                     console.log(convert);
                     return convert;
