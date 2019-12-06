@@ -303,7 +303,7 @@ var makeReport = function (result, callback) {
                                 result.message += `\n`;
 
                                 item.alive--;
-                                result.data.push(item);
+                                result.data.items.push(item);
                             }
                         }
                         callback(null);
