@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 const async = require('async');
 
 var now;
-
+var max_alive = 2;
 var ignoreProducts = [
     "아이템베이",
     "이랜드상품권",
@@ -82,7 +82,7 @@ var requestListPage = function (result, callback) {
 
                     convert.price = item.priceInfo.price;
                     convert.lowestPrice = convert.price;
-                    convert.alive = 3;
+                    convert.alive = max_alive;
 
                     if (item.discountPrice) {
                         if (convert.lowestPrice > item.discountPrice.price) {
