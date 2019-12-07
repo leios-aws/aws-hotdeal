@@ -287,6 +287,7 @@ var makeReport = function (result, callback) {
                         }, null);
 
                         if (!found) {
+                            item.alive--;
                             if (item.alive === 0) {
                                 console.log(`Soldout item ${item.title}`);
                                 result.message += `[판매 중지]\n`;
@@ -302,7 +303,6 @@ var makeReport = function (result, callback) {
                                 result.message += `URL: ${item.url}\n`;
                                 result.message += `\n`;
 
-                                item.alive--;
                                 result.data.items.push(item);
                             }
                         }
