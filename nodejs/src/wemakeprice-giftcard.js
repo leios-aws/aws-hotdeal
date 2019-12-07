@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 const async = require('async');
 
 var now;
-
+var max_alive = 2;
 var ignoreProducts = [
     "정관장",
     "아이템매니아",
@@ -137,7 +137,7 @@ var requestListPage = function (result, callback) {
             result.data.items = $('li').map((index, element) => {
                 var item = {};
 
-                item.alive = 3;
+                item.alive = max_alive;
 
                 var href = $("span.type03 > a", element).attr('href').split('?')[0];
                 if (href.startsWith('http')) {

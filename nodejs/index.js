@@ -296,13 +296,6 @@ var makeReport = function (result, callback) {
                                 result.message += `URL: ${item.url}\n`;
                                 result.message += `\n`;
                             } else {
-                                console.log(`Soldout item ${item.title}`);
-                                result.message += `[삭제 대기] ${item.alive}\n`;
-                                result.message += `품명: ${item.title}\n`;
-                                result.message += `가격: ${commaNumber(item.lowestPrice)}\n`;
-                                result.message += `URL: ${item.url}\n`;
-                                result.message += `\n`;
-
                                 result.data.items.push(item);
                             }
                         }
