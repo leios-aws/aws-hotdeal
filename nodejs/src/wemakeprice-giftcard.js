@@ -169,11 +169,11 @@ var requestListPage = function (result, callback) {
                     }
                 }
                 if (majorProduct === false) {
-                    if (item.price < 88000) {
+                    if (item.price <= 88000) {
                         return null;
                     }
                 } else {
-                    if (item.price < 10000) {
+                    if (item.price <= 10000) {
                         return null;
                     }
                 }

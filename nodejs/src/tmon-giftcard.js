@@ -113,11 +113,11 @@ var requestListPage = function (result, callback) {
                         }
                     }
                     if (majorProduct === false) {
-                        if (convert.price < 88000) {
+                        if (convert.price <= 88000) {
                             return null;
                         }
                     } else {
-                        if (convert.price < 10000) {
+                        if (convert.price <= 10000) {
                             return null;
                         }
                     }
