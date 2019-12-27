@@ -5,6 +5,14 @@ const async = require('async');
 
 var now;
 var max_alive = 2;
+var traceProducts = [
+    "컬쳐랜드",
+    "해피머니 온라인상품권",
+    "도서문화상품권",
+    "롯데",
+    "신세계",
+    "머니트리",
+];
 var ignoreProducts = [
     "아이템베이",
     "이랜드상품권",
@@ -98,8 +106,20 @@ var requestListPage = function (result, callback) {
 
                     convert.url = `http://www.tmon.co.kr/deal/${item.dealNo}`;
 
-                    if (convert.price < 88000) {
-                        return false;
+                    var majorProduct = false;
+                    for (var i = 0; i < traceProducts.length; i++) {
+                        if (convert.title.indexOf(traceProducts[i]) > -1) {
+                            majorProduct = true;
+                        }
+                    }
+                    if (majorProduct === false) {
+                        if (convert.price < 88000) {
+                            return null;
+                        }
+                    } else {
+                        if (convert.price < 10000) {
+                            return null;
+                        }
                     }
                     for (var i = 0; i < ignoreProducts.length; i++) {
                         if (convert.title.indexOf(ignoreProducts[i]) > -1) {

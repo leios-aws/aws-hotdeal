@@ -5,6 +5,15 @@ const async = require('async');
 
 var now;
 var max_alive = 2;
+var traceProducts = [
+    "컬쳐랜드",
+    "해피머니 온라인상품권",
+    "도서문화상품권",
+    "롯데",
+    "신세계",
+    "머니트리",
+];
+
 var ignoreProducts = [
     "정관장",
     "아이템매니아",
@@ -153,8 +162,20 @@ var requestListPage = function (result, callback) {
                 item.price = parseInt($("span.type03 > a > span.box_desc > span.txt_info > span.price > span.sale", element).text().replace(/,/g, ''), 10);
                 item.title = $("span.type03 > a > span.box_desc > strong.tit_desc", element).text();
 
-                if (item.price < 88000) {
-                    return null;
+                var majorProduct = false;
+                for (var i = 0; i < traceProducts.length; i++) {
+                    if (item.title.indexOf(traceProducts[i]) > -1) {
+                        majorProduct = true;
+                    }
+                }
+                if (majorProduct === false) {
+                    if (item.price < 88000) {
+                        return null;
+                    }
+                } else {
+                    if (item.price < 10000) {
+                        return null;
+                    }
                 }
                 for (var i = 0; i < ignoreProducts.length; i++) {
                     if (item.title.indexOf(ignoreProducts[i]) > -1) {

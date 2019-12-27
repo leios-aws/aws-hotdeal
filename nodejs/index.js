@@ -288,7 +288,7 @@ var makeReport = function (result, callback) {
 
                         if (!found) {
                             item.alive--;
-                            if (item.alive === 0) {
+                            if (item.alive <= 0) {
                                 console.log(`Soldout item ${item.title}`);
                                 result.message += `[판매 중지]\n`;
                                 result.message += `품명: ${item.title}\n`;
