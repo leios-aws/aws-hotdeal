@@ -7,7 +7,7 @@ var now;
 var max_alive = 2;
 var traceProducts = [
     "컬쳐랜드",
-    "해피머니 온라인상품권",
+    "해피머니",
     "도서문화상품권",
     "롯데",
     "신세계",
