@@ -199,7 +199,14 @@ var diffCommaNumber = function(num1, num2) {
 }
 
 var processItem = function (result, saved, item, callback) {
-    console.log(`신규 상품 확인 ${item.title} : ${item.url}, ${item.lowestPrice}`);
+    var re = /([0-9]+)만원/;
+    var matches = re.exec(item.title);
+    var percent = 10000;
+    if (matches && matches.length >= 2) {
+        percent = (item.lowestPrice * 10000) / (matches[1] * 10000);
+    }
+
+    console.log(`신규 상품 확인 ${item.title} : ${item.url}, ${item.lowestPrice}, ${(percent/100).toFixed(2)}%`);
 
     var found = saved.items.reduce((f, curr) => {
         if (f) {
@@ -217,7 +224,12 @@ var processItem = function (result, saved, item, callback) {
             console.log(`New item ${item.title}`);
             result.message += `[신규 상품 등록]\n`;
             result.message += `품명: ${item.title}\n`;
-            result.message += `가격: ${commaNumber(item.lowestPrice)}\n(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
+            if (percent === 10000) {
+                result.message += `가격: ${commaNumber(item.lowestPrice)}\n`;
+            } else {
+                result.message += `가격: ${commaNumber(item.lowestPrice)} ${(percent/100).toFixed(2)}%\n`;
+            }
+            result.message += `(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
             result.message += `URL: ${item.url}\n`
             result.message += `\n`;
         } else {
@@ -226,7 +238,12 @@ var processItem = function (result, saved, item, callback) {
                 console.log(`New lowest price ${item.title} => ${item.lowestPrice}`);
                 result.message += `[가격 변동]\n`;
                 result.message += `품명: ${item.title}\n`;
-                result.message += `가격: ${commaNumber(item.lowestPrice)} (${diffCommaNumber(item.lowestPrice, found.lowestPrice)})\n(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
+                if (percent === 10000) {
+                    result.message += `가격: ${commaNumber(item.lowestPrice)} (${diffCommaNumber(item.lowestPrice, found.lowestPrice)})\n`;
+                } else {
+                    result.message += `가격: ${commaNumber(item.lowestPrice)} ${(percent/100).toFixed(2)}% (${diffCommaNumber(item.lowestPrice, found.lowestPrice)})\n`;
+                }
+                result.message += `(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
                 result.message += `URL: ${item.url}\n`;
                 result.message += `\n`;
             }
