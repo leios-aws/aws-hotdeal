@@ -206,7 +206,24 @@ var processItem = function (result, saved, item, callback) {
         percent = (item.lowestPrice * 10000) / (matches[1] * 10000);
     }
 
-    console.log(`신규 상품 확인 ${item.title} : ${item.url}, ${item.lowestPrice}, ${(percent/100).toFixed(2)}%`);
+    // estimation
+    if (percent === 10000) {
+        var money_list = [1, 2, 3, 5, 10, 20, 50];
+        var curr_percent = 0;
+        for (var i = 0; i < money_list.length; i++) {
+            curr_percent = item.lowestPrice / money_list[i];
+            if (curr_percent <= 10000) {
+                percent = curr_percent;
+                break;
+            }
+        }
+    }
+
+    if (percent >= 10000) {
+        console.log(`신규 상품 확인 ${item.title} : ${item.url}, ${item.lowestPrice}`);
+    } else {
+        console.log(`신규 상품 확인 ${item.title} : ${item.url}, ${item.lowestPrice}, ${((10000 - percent)/100).toFixed(2)}%`);
+    }
 
     var found = saved.items.reduce((f, curr) => {
         if (f) {
@@ -224,10 +241,10 @@ var processItem = function (result, saved, item, callback) {
             console.log(`New item ${item.title}`);
             result.message += `[신규 상품 등록]\n`;
             result.message += `품명: ${item.title}\n`;
-            if (percent === 10000) {
+            if (percent >= 10000) {
                 result.message += `가격: ${commaNumber(item.lowestPrice)}\n`;
             } else {
-                result.message += `가격: ${commaNumber(item.lowestPrice)} ${(percent/100).toFixed(2)}%\n`;
+                result.message += `가격: ${commaNumber(item.lowestPrice)} ${((10000 - percent)/100).toFixed(2)}%\n`;
             }
             result.message += `(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
             result.message += `URL: ${item.url}\n`
