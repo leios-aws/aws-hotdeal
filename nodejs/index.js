@@ -258,7 +258,7 @@ var processItem = function (result, saved, item, callback) {
                 if (percent === 10000) {
                     result.message += `가격: ${commaNumber(item.lowestPrice)} (${diffCommaNumber(item.lowestPrice, found.lowestPrice)})\n`;
                 } else {
-                    result.message += `가격: ${commaNumber(item.lowestPrice)} ${(percent/100).toFixed(2)}% (${diffCommaNumber(item.lowestPrice, found.lowestPrice)})\n`;
+                    result.message += `가격: ${commaNumber(item.lowestPrice)} ${((10000 - percent)/100).toFixed(2)}% (${diffCommaNumber(item.lowestPrice, found.lowestPrice)})\n`;
                 }
                 result.message += `(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
                 result.message += `URL: ${item.url}\n`;
