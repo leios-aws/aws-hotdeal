@@ -210,11 +210,18 @@ var processItem = function (result, saved, item, callback) {
     if (percent === 10000) {
         var money_list = [1, 2, 3, 5, 10, 20, 50];
         var curr_percent = 0;
+        var temp_percent = 0;
         for (var i = 0; i < money_list.length; i++) {
             curr_percent = item.lowestPrice / money_list[i];
-            if (curr_percent <= 10000) {
-                percent = curr_percent;
+            if (curr_percent <= 10000 && temp_percent < curr_percent) {
+                temp_percent = curr_percent;
                 break;
+            } else {
+                if (temp_percent === 0) {
+                    percent = curr_percent;
+                } else {
+                    percent = temp_percent;
+                }
             }
         }
     }
