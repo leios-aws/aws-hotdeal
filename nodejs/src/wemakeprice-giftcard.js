@@ -162,6 +162,10 @@ var requestListPage = function (result, callback) {
                 item.price = parseInt($("span.type03 > a > span.box_desc > span.txt_info > span.price > span.sale", element).text().replace(/,/g, ''), 10);
                 item.title = $("span.type03 > a > span.box_desc > strong.tit_desc", element).text();
 
+                if (!item.price) {
+                    return null;
+                }
+
                 var majorProduct = false;
                 for (var i = 0; i < traceProducts.length; i++) {
                     if (item.title.indexOf(traceProducts[i]) > -1) {
