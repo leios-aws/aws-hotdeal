@@ -23,6 +23,7 @@ var ignoreProducts = [
     "CGV기프트카드",
     "(롯데마트)",
     "(하이마트)",
+    "아프리카",
 ];
 
 var req = request.defaults({
