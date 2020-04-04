@@ -56,7 +56,7 @@ var getStatistics = function (item, callback) {
         _latest_data: {price: item.price, ts: 0},
         _007d_price: item.price,
         _030d_price: item.price,
-        _365d_price: item.price,
+        _090d_price: item.price,
     };
 
     if (!productId) {
@@ -106,9 +106,9 @@ var getStatistics = function (item, callback) {
                 }
             }
             // 1년 이내 데이터이면
-            if (now < curr.ts + 365 * 24 * 60 * 60) {
-                if (curr.price < prev._365d_price) {
-                    prev._365d_price = curr.price;
+            if (now < curr.ts + 90 * 24 * 60 * 60) {
+                if (curr.price < prev._090d_price) {
+                    prev._090d_price = curr.price;
                 }
             }
 
@@ -160,7 +160,7 @@ var updateStatistics = function (productId, lowestPrice, callback) {
 
         unique_data = unique_data.map((d) => {
             // 1년 이내 데이터이면
-            if (now < d.ts + 365 * 24 * 60 * 60) {
+            if (now < d.ts + 90 * 24 * 60 * 60) {
                 return d;
             }
         });
@@ -238,7 +238,7 @@ var processItem = function (result, saved, item, callback) {
             } else {
                 result.message += `가격: ${commaNumber(item.lowestPrice)} ${((10000 - percent)/100).toFixed(2)}%\n`;
             }
-            result.message += `(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
+            result.message += `(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._090d_price)})\n`;
             result.message += `URL: ${item.url}\n`
             result.message += `\n`;
         } else {
@@ -252,7 +252,7 @@ var processItem = function (result, saved, item, callback) {
                 } else {
                     result.message += `가격: ${commaNumber(item.lowestPrice)} ${((10000 - percent)/100).toFixed(2)}% (${diffCommaNumber(item.lowestPrice, found.lowestPrice)})\n`;
                 }
-                result.message += `(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._365d_price)})\n`;
+                result.message += `(주: ${diffCommaNumber(item.lowestPrice, lowPrices._007d_price)} 월: ${diffCommaNumber(item.lowestPrice, lowPrices._030d_price)} 년: ${diffCommaNumber(item.lowestPrice, lowPrices._090d_price)})\n`;
                 result.message += `URL: ${item.url}\n`;
                 result.message += `\n`;
             }
