@@ -32,12 +32,6 @@ var lowestPrices;
 var statistics;
 
 var traceProducts = [
-    "컬쳐랜드",
-    "해피머니 온라인상품권",
-    "도서문화상품권",
-    "롯데",
-    "신세계",
-    "머니트리",
 ];
 
 var getProductId = function (item) {
