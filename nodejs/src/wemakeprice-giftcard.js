@@ -216,7 +216,7 @@ var parseItem = function (item, callback) {
             var matches = body.match(/(var aCouponList = .*)/);
             item.couponList = [];
             if (matches && matches.length > 1) {
-                console.log(item.url, matches[1]);
+                //console.log(item.url, matches[1]);
                 eval(matches[1]);
 
                 item.couponList = aCouponList.map((value, index, array) => {
