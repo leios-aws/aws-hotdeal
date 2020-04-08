@@ -130,12 +130,12 @@ var requestListPage = function (result, callback) {
                     if (item.isClosed || item.isPause || (item.dealMax && item.dealMax.soldOut)) {
                         convert.alive = 0;
                     }
-                    console.log(convert);
+                    //console.log(convert);
                     return convert;
                 }).filter(function(item) {
                     return item;
                 });
-                console.log(result.data.items);
+                //console.log(result.data.items);
             }
         }
 
