@@ -8,6 +8,7 @@ var max_alive = 2;
 var traceProducts = [
     "컬쳐랜드",
     "해피머니 온라인상품권",
+    "해피머니 온라인 상품권",
     "도서문화상품권",
     "롯데",
     "신세계",
@@ -159,7 +160,7 @@ var requestListPage = function (result, callback) {
                         item.url = 'http://www.wemakeprice.com' + href;
                     }
                 }
-                item.bridge = result.naver_bridge;
+                //item.bridge = result.naver_bridge;
                 item.price = parseInt($("span.type03 > a > span.box_desc > span.txt_info > span.price > span.sale", element).text().replace(/,/g, ''), 10);
                 item.title = $("span.type03 > a > span.box_desc > strong.tit_desc", element).text();
 
