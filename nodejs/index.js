@@ -31,6 +31,7 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 var now;
 var lowestPrices;
 var statistics;
+var preventDelete;
 
 var traceProducts = [
 ];
@@ -271,6 +272,8 @@ var makeReport = function (result, callback) {
     };
 
     result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst);
+    preventDelete = (result.tmon.length == 0 || result.wemakeprice.length == 0);
+    console.log("preventDelete:", preventDelete);
 
     result.data.items = result.data.items.filter(function(item) {
         return item.alive > 0;
@@ -308,16 +311,20 @@ var makeReport = function (result, callback) {
                         }, null);
 
                         if (!found) {
-                            item.alive--;
-                            if (item.alive <= 0) {
-                                console.log(`Soldout item ${item.title}`);
-                                result.message += `[판매 중지]\n`;
-                                result.message += `품명: ${item.title}\n`;
-                                result.message += `가격: ${commaNumber(item.lowestPrice)}\n`;
-                                result.message += `URL: ${item.url}\n`;
-                                result.message += `\n`;
-                            } else {
+                            if (preventDelete) {
                                 result.data.items.push(item);
+                            } else {
+                                item.alive--;
+                                if (item.alive <= 0) {
+                                    console.log(`Soldout item ${item.title}`);
+                                    result.message += `[판매 중지]\n`;
+                                    result.message += `품명: ${item.title}\n`;
+                                    result.message += `가격: ${commaNumber(item.lowestPrice)}\n`;
+                                    result.message += `URL: ${item.url}\n`;
+                                    result.message += `\n`;
+                                } else {
+                                    result.data.items.push(item);
+                                }
                             }
                         }
                         callback(null);
