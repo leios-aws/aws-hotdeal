@@ -12,6 +12,7 @@ var traceProducts = [
     "롯데",
     "신세계",
     "머니트리",
+    "페이코"
 ];
 var ignoreProducts = [
     "아이템베이",
