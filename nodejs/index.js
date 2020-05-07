@@ -196,7 +196,7 @@ var diffCommaNumber = function(num1, num2) {
 
 var processItem = function (result, saved, item, callback) {
     var percent = 10000;
-    var money_list = [1, 2, 3, 5, 10, 20, 50];
+    var money_list = [1, 2, 3, 4, 5, 10, 20, 50];
     var curr_percent = 0;
     var temp_percent = 0;
     for (var i = 0; i < money_list.length; i++) {
