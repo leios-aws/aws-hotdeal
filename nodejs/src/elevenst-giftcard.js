@@ -41,32 +41,17 @@ var req = request.defaults({
 
 var requestListPage = function (result, callback) {
     var option = {
-        uri: 'http://search.11st.co.kr/Search.tmall',
-        method: 'GET',
+        uri: 'https://shop.11st.co.kr/storesAjax/StoreListingAjaxAction.tmall?method=StoreSearchListingAjax',
+        method: 'POST',
         json: true,
-        qs: {
-            method: 'getSearchFilterAjax',
-            kwd: '%C7%D8%C7%C7%B8%D3%B4%CF',
-            searchKeyword: '%C7%D8%C7%C7%B8%D3%B4%CF',
-            filterSearch: 'Y',
-            pageLoadType: 'ajax',
-            selectedFilterYn: 'Y',
-            version: '1.2',
-            sellerNos: '',
-            pageNo: '1',
-            encodeSearchKeyword: '해피머니',
-            decSearchKeyword: '해피머니',
-            fromPrice: '45000',
-            toPrice: '47000',
-            kwd: '%ED%95%B4%ED%94%BC%EB%A8%B8%EB%8B%88',
-            pageSize: '80',
-            minPrice: '45000',
-            maxPrice: '47000',
-            firstInputKwd: '해피머니',
-            myPrdViewYN: 'Y',
-            sellerCreditGradeType: '[]',
-            dispCtgrNo: '117025',
-            dispCtgrType: 'lCtgrNo',
+        formData: {
+            searchKwd: '%ED%95%B4%ED%94%BC%EB%A8%B8%EB%8B%88',
+            storeId: '330687',
+            storeNo: '330687',
+            encSellerNo: 'qg9Y3Xx2blZlbGkU6r7rPg==',
+            pageTypeCd: '02',
+            sortCd: 'NP',
+            trTypeCd: 'STP06',
         }
     };
 
@@ -77,24 +62,18 @@ var requestListPage = function (result, callback) {
         //console.log(body.totalCount);
         //console.log(body.template);
 
-        if (!err && body.totalCount && body.totalCount > 1 && body.template) {
-            var $ = cheerio.load(body.template);
-            result.data.items = $("div.list_info > p.info_tit > a").map((index, element) => {
+        if (!err && body.totalCount && body.totalCount > 0 && body.data && body.data.productList) {
+            for (var i = 0; i < body.data.productList.length; i++) {
                 var item = {};
-                var data = $(element).data('log-body');
+                item.url = body.data.productList[i].prdDtlUrl;
+                item.price = body.data.productList[i].selPrice;
+                item.lowestPrice = body.data.productList[i].finalDscPrice;
+                item.title = body.data.productList[i].prdNm;
 
-                item.alive = max_alive;
-                item.url = data.link_url;
-                item.price = parseInt(data.last_discount_price, 10);
-                item.lowestPrice = parseInt(data.last_discount_price, 10);
-                item.title = data.content_name;
-
-                if (!item.price) {
-                    return null;
-                }
-                return item;
-            }).get();
+                result.data.items.push(item);
+            }
         }
+        console.log(result.data);
 
         callback(err, result);
     });
