@@ -65,16 +65,15 @@ var requestListPage = function (result, callback) {
         if (!err && body.totalCount && body.totalCount > 0 && body.data && body.data.productList) {
             for (var i = 0; i < body.data.productList.length; i++) {
                 var item = {};
+                item.alive = max_alive;
                 item.url = body.data.productList[i].prdDtlUrl;
                 item.price = body.data.productList[i].selPrice;
-                item.lowestPrice = body.data.productList[i].finalDscPrice;
+                item.lowestPrice = body.data.productList[i].finalDscPrc;
                 item.title = body.data.productList[i].prdNm;
 
                 result.data.items.push(item);
             }
         }
-        console.log(result.data);
-
         callback(err, result);
     });
 };
