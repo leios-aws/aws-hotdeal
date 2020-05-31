@@ -270,9 +270,9 @@ exports.process = function (main_result, callback) {
                 naver_bridge: "",
             });
         },
-        requestNaverShoppingSearch,
-        requestNaverShoppingBridge,
-        requestNaverShoppingWemakeprice,
+        //requestNaverShoppingSearch,
+        //requestNaverShoppingBridge,
+        //requestNaverShoppingWemakeprice,
         requestListPage,
         function (result, callback) {
             async.eachLimit(result.data.items, 5, parseItem, function (err) {
