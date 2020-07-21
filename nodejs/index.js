@@ -4,6 +4,7 @@ const wemakeprice_giftcard = require('./src/wemakeprice-giftcard.js');
 const tmon_giftcard = require('./src/tmon-giftcard.js');
 const elevenst_giftcard = require('./src/elevenst-giftcard.js');
 const auction_giftcard = require('./src/auction-giftcard.js');
+const gmarket_giftcard = require('./src/gmarket-giftcard.js');
 const config = require('config');
 const AWS = require('aws-sdk');
 const commaNumber = require('comma-number');
@@ -272,7 +273,7 @@ var makeReport = function (result, callback) {
         }
     };
 
-    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction);
+    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket);
     preventDelete = (result.tmon.length == 0 || result.wemakeprice.length == 0);
     console.log("preventDelete:", preventDelete);
 
@@ -415,13 +416,14 @@ exports.handler = function (event, context, callback) {
                 message: "",
             });
         },
-        wemakeprice_giftcard.process,
-        tmon_giftcard.process,
-        elevenst_giftcard.process,
-        auction_giftcard.process,
-        makeReport,
-        saveReport,
-        notifyReport,
+        //wemakeprice_giftcard.process,
+        //tmon_giftcard.process,
+        //elevenst_giftcard.process,
+        //auction_giftcard.process,
+        gmarket_giftcard.process,
+        //makeReport,
+        //saveReport,
+        //notifyReport,
     ], function (err, result) {
         if (err) {
             console.log(err);
