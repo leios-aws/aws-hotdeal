@@ -416,14 +416,14 @@ exports.handler = function (event, context, callback) {
                 message: "",
             });
         },
-        //wemakeprice_giftcard.process,
-        //tmon_giftcard.process,
-        //elevenst_giftcard.process,
-        //auction_giftcard.process,
+        wemakeprice_giftcard.process,
+        tmon_giftcard.process,
+        elevenst_giftcard.process,
+        auction_giftcard.process,
         gmarket_giftcard.process,
-        //makeReport,
-        //saveReport,
-        //notifyReport,
+        makeReport,
+        saveReport,
+        notifyReport,
     ], function (err, result) {
         if (err) {
             console.log(err);
