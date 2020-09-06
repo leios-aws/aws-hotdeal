@@ -63,7 +63,7 @@ var requestListPage = function (result, callback) {
         uri: 'http://browse.gmarket.co.kr/list',
         method: 'GET',
         qs: {
-            f: 'p:45000^46500',
+            f: 'p:45000^47000',
             category: '300022520'
         }
     };
@@ -72,7 +72,7 @@ var requestListPage = function (result, callback) {
         result.response = response;
         result.body = body;
 
-        console.log("Parsing Item List");
+        console.log("Parsing Item List: gmarket");
         if (!err) {
             var $ = cheerio.load(body);
             // #section--inner_content_body_container > div:nth-child(2) > div:nth-child(2)
