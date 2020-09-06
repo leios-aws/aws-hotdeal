@@ -142,7 +142,7 @@ var requestListPage = function (result, callback) {
         result.response = response;
         result.body = body;
 
-        console.log("Parsing Item List");
+        console.log("Parsing Item List: wemakeprice");
         if (!err) {
             var $ = cheerio.load(body.html);
             result.data.items = $('li').map((index, element) => {
