@@ -24,6 +24,7 @@ var ignoreProducts = [
     "컬쳐랜드 지류",
     "LG U+ 데이터",
     "지류상품권",
+    "슈퍼세이브"
 ];
 
 var req = request.defaults({
