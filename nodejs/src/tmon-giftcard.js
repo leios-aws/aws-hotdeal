@@ -80,10 +80,10 @@ var requestListPage = function (result, callback) {
             if (body && body.data && body.data.items) {
                 result.data.items = body.data.items.map(function(item, index) {
                     var convert = {};
-                    if (item.titleDesc) {
-                        convert.title = item.titleDesc;
-                    } else if (item.titleName) {
+                    if (item.titleName) {
                         convert.title = item.titleName;
+                    } else if (item.titleDesc) {
+                        convert.title = item.titleDesc;
                     } else if (item.title) {
                         convert.title = item.title;
                     } else {
