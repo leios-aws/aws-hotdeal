@@ -243,9 +243,31 @@ var processItem = function (result, saved, item, callback) {
             result.message += `\n`;
         } else {
             console.log(`통계 최저가: ${lowPrices._latest_data.price}, 최저가 변동: ${found.lowestPrice} => ${item.lowestPrice}`);
-            if (item.lowestPrice !== found.lowestPrice || item.count !== found.count) {
-                console.log(`New lowest price ${item.title} => ${item.lowestPrice}`);
-                result.message += `[가격/개수 변동]\n`;
+            var changed = 0;
+
+
+
+            if (item.lowestPrice !== found.lowestPrice) {
+                changed |= 0x01;
+            }
+            if (item.count !== found.count) {
+                changed |= 0x02;
+            }
+
+            if (changed > 0) {
+                console.log(`Item changed ${item.title} => ${item.lowestPrice}, ${item.count}`);
+                switch (changed) {
+                    case 1:
+                        result.message += `[가격 변동]\n`;
+                        break;
+                    case 2:
+                        result.message += `[개수 변동]\n`;
+                        break;
+                    case 3:
+                        result.message += `[가격/개수 변동]\n`;
+                        break;
+                }
+
                 result.message += `품명: ${item.title}\n`;
                 if (percent === 10000) {
                     result.message += `가격: ${commaNumber(item.lowestPrice)} (${diffCommaNumber(item.lowestPrice, found.lowestPrice)}) (개수: ${item.count})\n`;
