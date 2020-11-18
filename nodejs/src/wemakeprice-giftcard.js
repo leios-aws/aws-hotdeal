@@ -149,6 +149,7 @@ var requestListPage = function (result, callback) {
                 var item = {};
 
                 item.alive = max_alive;
+                item.count = 1000;
 
                 var href = $("span.type03 > a", element).attr('href').split('?')[0];
                 if (href.startsWith('http')) {
