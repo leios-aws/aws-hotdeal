@@ -6,24 +6,9 @@ const async = require('async');
 var now;
 var max_alive = 2;
 var traceProducts = [
-    "컬쳐랜드",
-    "해피머니",
-    "도서문화",
-    "롯데",
-    "신세계",
-    "머니트리",
-    "페이코"
+    "한국투자증권",
 ];
 var ignoreProducts = [
-    "아이템베이",
-    "이랜드상품권",
-    "골프문화상품권",
-    "파리크라상",
-    "신세계면세점",
-    "SPC 해피상품권",
-    "컬쳐랜드 지류",
-    "LG U+ 데이터",
-    "지류상품권",
 ];
 
 var req = request.defaults({
@@ -39,14 +24,14 @@ var req = request.defaults({
     //encoding: null
 });
 
-var requestDelay = function(result, callback) {
+var requestDelay = function (result, callback) {
     if (result.data.items.length > 0) {
         console.log("Skip retry...");
         callback(null, result);
         return;
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
         console.log("Delayed retry...");
         callback(null, result);
         return;
@@ -60,11 +45,10 @@ var requestListPage = function (result, callback) {
         return;
     }
     var option = {
-        uri: 'http://browse.gmarket.co.kr/list',
+        uri: 'http://stores.auction.co.kr/coopmkt/List',
         method: 'GET',
         qs: {
-            f: 'p:45000^47000',
-            category: '300022520'
+            Category: '86050000'
         }
     };
 
@@ -72,42 +56,27 @@ var requestListPage = function (result, callback) {
         result.response = response;
         result.body = body;
 
-        console.log("Parsing Item List: gmarket");
+        console.log("Parsing Item List: auction - truefriend");
         if (!err) {
             var $ = cheerio.load(body);
             // #section--inner_content_body_container > div:nth-child(2) > div:nth-child(2)
-            result.data.items = $('.box__component-itemcard').map((index, element) => {
+            result.data.items = $('.prod_list > ul > li').map((index, element) => {
                 var item = {};
 
                 item.alive = max_alive;
                 item.count = 1000;
 
+                //li:nth-child(1) > div > p.prd_name > a
                 //console.log($(element).text());
-                $('span > .link__item', element).map((link_index, link_element) => {
-                    //console.log($(link_element).attr('href'));
-                    item.url = $(link_element).attr('href');
-                })
-
-                $('div > span .text__item', element).map((title_index, title_element) => {
-                    //console.log($(title_element).text());
-                    item.title = $(title_element).text();
-                })
-
-                $('div .box__price-original >  .text__value', element).map((price_index, price_element) => {
-                    //console.log($(price_element).text());
-                    item.price = parseInt($(price_element).text().replace(/,/g, ''), 10);
-                })
-
-                $('div .box__price-seller >  .text__value', element).map((price_index, price_element) => {
-                    //console.log($(price_element).text());
-                    item.lowestPrice = parseInt($(price_element).text().replace(/,/g, ''), 10);
-                })
+                var link_element = $('.prd_name > a', element);
+                var price_element = $('.prd_price > em > strong', element);
+                item.url = $(link_element).attr('href');
+                item.title = $(link_element).text();
+                item.price = parseInt($(price_element).text().replace(/,/g, ''), 10);
+                item.lowestPrice = item.price;
 
                 if (!item.price) {
                     return null;
-                }
-                if (!item.lowestPrice) {
-                    item.lowestPrice = item.price;
                 }
 
                 var majorProduct = false;
@@ -117,18 +86,7 @@ var requestListPage = function (result, callback) {
                     }
                 }
                 if (majorProduct === false) {
-                    if (item.price <= 88000) {
-                        return null;
-                    }
-                } else {
-                    if (item.price <= 10000) {
-                        return null;
-                    }
-                }
-                for (var i = 0; i < ignoreProducts.length; i++) {
-                    if (item.title.indexOf(ignoreProducts[i]) > -1) {
-                        return null;
-                    }
+                    return null;
                 }
 
                 /*
@@ -144,11 +102,32 @@ var requestListPage = function (result, callback) {
                 return item;
             }).get();
         }
-        console.log(result.data.items);
 
         callback(err, result);
     });
 };
+
+var parseItem = function (item, callback) {
+    var option = {
+        uri: item.url,
+        method: 'GET',
+        qs: {
+        }
+    };
+
+    req(option, function (err, response, body) {
+        if (!err) {
+            var $ = cheerio.load(body);
+
+            var text = $('#hdivBuyQty > p').text();
+            var matches = text.match(/([0-9]+)/);
+            if (matches && matches.length > 1) {
+                item.count = parseInt(matches[0]);
+            }
+        }
+        callback(err);
+    });
+}
 
 exports.process = function (main_result, callback) {
     now = Math.floor(Date.now() / 1000);
@@ -167,12 +146,17 @@ exports.process = function (main_result, callback) {
         requestListPage,
         requestDelay,
         requestListPage,
+        function (result, callback) {
+            async.eachLimit(result.data.items, 5, parseItem, function (err) {
+                callback(err, result);
+            });
+        },
     ], function (err, result) {
         if (err) {
             console.log(err);
         }
         if (callback) {
-            main_result.gmarket = result.data.items;
+            main_result.auction_truefriend = result.data.items;
             callback(err, main_result);
         }
     });

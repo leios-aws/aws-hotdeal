@@ -93,6 +93,7 @@ var requestListPage = function (result, callback) {
                     convert.price = item.priceInfo.price;
                     convert.lowestPrice = convert.price;
                     convert.alive = max_alive;
+                    convert.count = 1000;
 
                     if (item.discountPrice) {
                         if (convert.lowestPrice > item.discountPrice.price) {

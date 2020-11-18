@@ -4,7 +4,9 @@ const wemakeprice_giftcard = require('./src/wemakeprice-giftcard.js');
 const tmon_giftcard = require('./src/tmon-giftcard.js');
 const elevenst_giftcard = require('./src/elevenst-giftcard.js');
 const auction_giftcard = require('./src/auction-giftcard.js');
+const auction_truefriend = require('./src/auction-truefriend.js');
 const gmarket_giftcard = require('./src/gmarket-giftcard.js');
+const gmarket_truefriend = require('./src/gmarket-truefriend.js');
 const config = require('config');
 const AWS = require('aws-sdk');
 const commaNumber = require('comma-number');
@@ -241,9 +243,9 @@ var processItem = function (result, saved, item, callback) {
             result.message += `\n`;
         } else {
             console.log(`통계 최저가: ${lowPrices._latest_data.price}, 최저가 변동: ${found.lowestPrice} => ${item.lowestPrice}`);
-            if (item.lowestPrice !== found.lowestPrice) {
+            if (item.lowestPrice !== found.lowestPrice || item.count !== found.count) {
                 console.log(`New lowest price ${item.title} => ${item.lowestPrice}`);
-                result.message += `[가격 변동]\n`;
+                result.message += `[가격/개수 변동]\n`;
                 result.message += `품명: ${item.title}\n`;
                 if (percent === 10000) {
                     result.message += `가격: ${commaNumber(item.lowestPrice)} (${diffCommaNumber(item.lowestPrice, found.lowestPrice)})\n`;
@@ -273,7 +275,7 @@ var makeReport = function (result, callback) {
         }
     };
 
-    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket);
+    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket, result.auction_truefriend, result.gmarket_truefriend);
     preventDelete = (result.tmon.length == 0 || result.wemakeprice.length == 0);
     console.log("preventDelete:", preventDelete);
 
@@ -388,6 +390,7 @@ var notifyReport = function (result, callback) {
         req(option, function (err, response, body) {
             if (!err && (body && !body.ok)) {
                 console.log(body);
+                console.log(result.message);
                 callback("Send Message Fail", result);
             } else {
                 callback(err, result);
@@ -410,6 +413,10 @@ exports.handler = function (event, context, callback) {
                 wemakeprice: [],
                 tmon: [],
                 elevenst: [],
+                auction: [],
+                auction_truefriend: [],
+                gmarket: [],
+                gmarket_truefriend: [],
                 data: {
                     items: [],
                 },
@@ -420,7 +427,9 @@ exports.handler = function (event, context, callback) {
         tmon_giftcard.process,
         elevenst_giftcard.process,
         auction_giftcard.process,
+        auction_truefriend.process,
         gmarket_giftcard.process,
+        gmarket_truefriend.process,
         makeReport,
         saveReport,
         notifyReport,

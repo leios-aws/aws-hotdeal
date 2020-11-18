@@ -80,6 +80,7 @@ var requestListPage = function (result, callback) {
                 var item = {};
 
                 item.alive = max_alive;
+                item.count = 1000;
 
                 //console.log($(element).text());
                 $('span > .link--itemcard', element).map((link_index, link_element) => {
