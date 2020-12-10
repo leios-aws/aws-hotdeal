@@ -433,6 +433,8 @@ AWS.Service = inherit({
       apiCallEvent.Latency = latency >= 0 ? latency : 0;
       var response = request.response;
       if (
+        response.error &&
+        response.error.retryable &&
         typeof response.retryCount === 'number' &&
         typeof response.maxRetries === 'number' &&
         (response.retryCount >= response.maxRetries)
@@ -450,6 +452,14 @@ AWS.Service = inherit({
    * @method_abstract This is an abstract method.
    */
   setupRequestListeners: function setupRequestListeners(request) {
+  },
+
+  /**
+   * Gets the signing name for a given request
+   * @api private
+   */
+  getSigningName: function getSigningName() {
+    return this.api.signingName || this.api.endpointPrefix;
   },
 
   /**
