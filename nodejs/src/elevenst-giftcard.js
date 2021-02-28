@@ -79,6 +79,47 @@ var requestHappyMoneyListPage = function (result, callback) {
     });
 };
 
+
+var requestBooknLifeListPage = function (result, callback) {
+    var option = {
+        uri: 'https://shop.11st.co.kr/storesAjax/StoreListingAjaxAction.tmall?method=StoreSearchListingAjax',
+        method: 'POST',
+        json: true,
+        formData: {
+            searchKwd: '%25EB%25B6%2581%25EC%2595%25A4',
+            storeId: '330687',
+            storeNo: '330687',
+            encSellerNo: 'qg9Y3Xx2blZlbGkU6r7rPg==',
+            pageTypeCd: '02',
+            sortCd: 'NP',
+            trTypeCd: 'STP06',
+        }
+    };
+
+    req(option, function (err, response, body) {
+        result.response = response;
+        result.body = body;
+
+        //console.log(body.totalCount);
+        //console.log(body.template);
+
+        if (!err && body.totalCount && body.totalCount > 0 && body.data && body.data.productList) {
+            for (var i = 0; i < body.data.productList.length; i++) {
+                var item = {};
+                item.alive = max_alive;
+                item.count = 1000;
+                item.url = body.data.productList[i].prdDtlUrl;
+                item.price = body.data.productList[i].selPrice;
+                item.lowestPrice = body.data.productList[i].finalDscPrc;
+                item.title = body.data.productList[i].prdNm;
+
+                result.data.items.push(item);
+            }
+        }
+        callback(err, result);
+    });
+};
+
 var requestTrueFriendListPage = function (result, callback) {
     var option = {
         uri: 'https://shop.11st.co.kr/storesAjax/StoreListingAjaxAction.tmall?method=StoreSearchListingAjax',
@@ -131,6 +172,7 @@ exports.process = function (main_result, callback) {
             });
         },
         requestHappyMoneyListPage,
+        requestBooknLifeListPage,
         requestTrueFriendListPage,
     ], function (err, result) {
         if (err) {

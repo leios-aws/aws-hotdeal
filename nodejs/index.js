@@ -299,7 +299,8 @@ var makeReport = function (result, callback) {
     };
 
     result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket, result.auction_truefriend, result.gmarket_truefriend, result.cultureland_giftcard);
-    preventDelete = (result.tmon.length == 0 || result.wemakeprice.length == 0);
+    //preventDelete = (result.tmon.length == 0 || result.wemakeprice.length == 0);
+    preventDelete = result.tmon.length == 0;
     console.log("preventDelete:", preventDelete);
 
     result.data.items = result.data.items.filter(function(item) {
@@ -326,7 +327,7 @@ var makeReport = function (result, callback) {
                 },
                 function (callback) {
                     async.each(saved.items, (item, callback) => {
-                        console.log(`기존 상품 확인: ${item.title} : ${item.url} ${item.lowestPrice}`);
+                        console.log(`기존 상품 확인: ${item.title} : ${item.url} ${item.lowestPrice} ${item.alive}`);
                         var found = result.data.items.reduce((f, curr) => {
                             if (f) {
                                 return f;
