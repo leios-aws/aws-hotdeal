@@ -39,6 +39,47 @@ var req = request.defaults({
     encoding: null
 });
 
+var requestHappyMoneyPage = function (result, callback) {
+    var option = {
+        uri: 'https://www.11st.co.kr/products/2778024489',
+        method: 'GET',
+        json: false
+    };
+
+    req(option, function (err, response, body) {
+        result.response = response;
+        result.body = body;
+
+        //console.log(body.totalCount);
+        //console.log(body.template);
+        if (!err) {
+            var $ = cheerio.load(body);
+            var title_element = $('.c_product_info_title > h1');
+            var lower_price_element = $('.price_wrap > li > dl > dd > strong > span.value');
+            var price_element = $('.price_regular > dd > span.value');
+
+            var item = {};
+            item.alive = max_alive;
+            item.count = 1000;
+            item.url = 'https://www.11st.co.kr/products/2778024489';
+            if (lower_price_element.text()) {
+                item.lowestPrice = parseInt($(lower_price_element).text().replace(/,/g, ''), 10);
+            }
+            if (price_element.text()) {
+                item.price = parseInt($(price_element).text().replace(/,/g, ''), 10);
+            } else {
+                item.price = item.lowestPrice
+            }
+            item.title = title_element.text().trim();
+
+            if (item.lowestPrice) {
+                result.data.items.push(item);
+            }
+        }
+        callback(err, result);
+    });
+}
+
 var requestHappyMoneyListPage = function (result, callback) {
     var option = {
         uri: 'https://shop.11st.co.kr/storesAjax/StoreListingAjaxAction.tmall?method=StoreSearchListingAjax',
@@ -79,6 +120,46 @@ var requestHappyMoneyListPage = function (result, callback) {
     });
 };
 
+var requestBooknLifePage = function (result, callback) {
+    var option = {
+        uri: 'https://www.11st.co.kr/products/3109937522',
+        method: 'GET',
+        json: false
+    };
+
+    req(option, function (err, response, body) {
+        result.response = response;
+        result.body = body;
+
+        //console.log(body.totalCount);
+        //console.log(body.template);
+        if (!err) {
+            var $ = cheerio.load(body);
+            var title_element = $('.c_product_info_title > h1');
+            var lower_price_element = $('.price_wrap > li > dl > dd > strong > span.value');
+            var price_element = $('.price_regular > dd > span.value');
+
+            var item = {};
+            item.alive = max_alive;
+            item.count = 1000;
+            item.url = 'https://www.11st.co.kr/products/3109937522';
+            if (lower_price_element.text()) {
+                item.lowestPrice = parseInt($(lower_price_element).text().replace(/,/g, ''), 10);
+            }
+            if (price_element.text()) {
+                item.price = parseInt($(price_element).text().replace(/,/g, ''), 10);
+            } else {
+                item.price = item.lowestPrice
+            }
+            item.title = title_element.text().trim();
+
+            if (item.lowestPrice) {
+                result.data.items.push(item);
+            }
+        }
+        callback(err, result);
+    });
+}
 
 var requestBooknLifeListPage = function (result, callback) {
     var option = {
@@ -171,6 +252,8 @@ exports.process = function (main_result, callback) {
                 },
             });
         },
+        requestHappyMoneyPage,
+        requestBooknLifePage,
         requestHappyMoneyListPage,
         requestBooknLifeListPage,
         requestTrueFriendListPage,
