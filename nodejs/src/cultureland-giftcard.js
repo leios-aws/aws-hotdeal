@@ -145,7 +145,6 @@ exports.process = function (main_result, callback) {
         }
         if (callback) {
             main_result.cultureland_giftcard = result.data.items;
-            console.log(main_result.cultureland_giftcard)
             callback(err, main_result);
         }
     });
