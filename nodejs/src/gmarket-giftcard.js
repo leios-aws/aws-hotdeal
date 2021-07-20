@@ -90,7 +90,7 @@ var requestListPage = function (result, callback) {
 
                 $('div > span .text__item', element).map((title_index, title_element) => {
                     //console.log($(title_element).text());
-                    item.title = $(title_element).text();
+                    item.title = $(title_element).text().trim();
                 })
 
                 $('div .box__price-original >  .text__value', element).map((price_index, price_element) => {
@@ -144,7 +144,7 @@ var requestListPage = function (result, callback) {
                 return item;
             }).get();
         }
-        console.log(result.data.items);
+        //console.log(result.data.items);
 
         callback(err, result);
     });

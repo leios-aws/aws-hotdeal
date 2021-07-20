@@ -68,7 +68,7 @@ var requestListPage = function (result, callback) {
                 var link_element = $('.prd_name > a', element);
                 var price_element = $('.prd_price > em > strong', element);
                 item.url = $(link_element).attr('href');
-                item.title = $(link_element).text();
+                item.title = $(link_element).text().trim();
                 item.price = parseInt($(price_element).text().replace(/,/g, ''), 10);
                 item.lowestPrice = item.price;
 

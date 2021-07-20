@@ -6,24 +6,8 @@ const async = require('async');
 var now;
 var max_alive = 2;
 var traceProducts = [
-    "컬쳐랜드",
-    "해피머니",
-    "도서문화",
-    "롯데",
-    "신세계",
-    "머니트리",
-    "페이코"
 ];
 var ignoreProducts = [
-    "아이템베이",
-    "이랜드상품권",
-    "골프문화상품권",
-    "파리크라상",
-    "신세계면세점",
-    "SPC 해피상품권",
-    "컬쳐랜드 지류",
-    "LG U+ 데이터",
-    "지류상품권",
 ];
 
 var req = request.defaults({
@@ -91,7 +75,7 @@ var requestListPage = function (result, callback) {
 
                 $('.item-name', element).map((title_index, title_element) => {
                     //console.log($(title_element).text());
-                    item.title = $(title_element).text();
+                    item.title = $(title_element).text().trim();
                 })
 
                 $('.price', element).map((price_index, price_element) => {
@@ -132,6 +116,7 @@ var requestListPage = function (result, callback) {
                 return item;
             }).get();
         }
+        //console.log(result.data.items);
 
         callback(err, result);
     });

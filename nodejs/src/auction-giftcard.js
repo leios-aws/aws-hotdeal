@@ -90,7 +90,7 @@ var requestListPage = function (result, callback) {
 
                 $('div > span .text--title', element).map((title_index, title_element) => {
                     //console.log($(title_element).text());
-                    item.title = $(title_element).text();
+                    item.title = $(title_element).text().trim();
                 })
 
                 $('div > span > .text--price_seller', element).map((price_index, price_element) => {
