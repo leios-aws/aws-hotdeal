@@ -181,7 +181,15 @@ var requestListPage = function (result, callback) {
                         return false;
                     }
 
-                    convert.price = deal.originPrice;
+                    if (deal.originPrice) {
+                        convert.price = deal.originPrice;
+                    }
+                    if (deal.salePrice) {
+                        if (convert.price > deal.salePrice) {
+                            convert.price = deal.salePrice;
+                        }
+                    }
+
                     convert.lowestPrice = convert.price;
                     convert.alive = max_alive;
                     convert.count = 1000;
