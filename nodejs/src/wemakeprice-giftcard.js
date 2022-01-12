@@ -127,14 +127,42 @@ var requestNaverShoppingWemakeprice = function (result, callback) {
     });
 };
 
+var requestDelay = function(result, callback) {
+    if (result.data.items.length > 0) {
+        console.log("Skip retry...");
+        callback(null, result);
+        return;
+    }
+
+    setTimeout(function() {
+        console.log("Delayed retry...");
+        callback(null, result);
+        return;
+    }, 1000);
+}
+
 var requestListPage = function (result, callback) {
+    if (result.data.items.length > 0) {
+        console.log("Skip retry...");
+        callback(null, result);
+        return;
+    }
+
     var option = {
         //uri: 'http://www.wemakeprice.com/main/103900/103912',
-        uri: 'http://www.wemakeprice.com/main/get_deal_more/103900/103912',
+        uri: 'https://front.wemakeprice.com/api/listingsearch/v1.2/deal/list.json?',
         method: 'GET',
         json: true,
         qs: {
-            r_cnt: 100
+            os: 'pc',
+            apiVersion: '1.2',
+            domain: 'listingsearch-api.wemakeprice.com',
+            path: '/v1.2/deal/list',
+            categoryId: '2100239',
+            sort: 'expensive',
+            page: 1,
+            perPage: 99,
+            showAdCategoryPick: true
         }
     };
 
@@ -144,61 +172,55 @@ var requestListPage = function (result, callback) {
 
         console.log("Parsing Item List: wemakeprice");
         if (!err) {
-            var $ = cheerio.load(body.html);
-            result.data.items = $('li').map((index, element) => {
-                var item = {};
-
-                item.alive = max_alive;
-                item.count = 1000;
-
-                var href = $("span.type03 > a", element).attr('href').split('?')[0];
-                if (href.startsWith('http')) {
-                    item.url = href;
-                } else {
-                    if (href.endsWith('/103900/')) {
-                        item.url = 'http://www.wemakeprice.com' + href.replace(/\/103900\//g, '');
+            if (body && body.data && body.data.deals) {
+                result.data.items = body.data.deals.map(function(deal, index) {
+                    var convert = {};
+                    if (deal.dispNm) {
+                        convert.title = deal.dispNm;
                     } else {
-                        item.url = 'http://www.wemakeprice.com' + href;
+                        return false;
                     }
-                }
-                //item.bridge = result.naver_bridge;
-                item.price = parseInt($("span.type03 > a > span.box_desc > span.txt_info > span.price > span.sale", element).text().replace(/,/g, ''), 10);
-                item.title = $("span.type03 > a > span.box_desc > strong.tit_desc", element).text();
 
-                if (!item.price) {
-                    return null;
-                }
+                    convert.price = deal.originPrice;
+                    convert.lowestPrice = convert.price;
+                    convert.alive = max_alive;
+                    convert.count = 1000;
 
-                var majorProduct = false;
-                for (var i = 0; i < traceProducts.length; i++) {
-                    if (item.title.indexOf(traceProducts[i]) > -1) {
-                        majorProduct = true;
+                    if (deal.discountPrice) {
+                        if (convert.lowestPrice > deal.discountPrice) {
+                            convert.lowestPrice = deal.discountPrice;
+                        }
                     }
-                }
-                if (majorProduct === false) {
-                    if (item.price <= 88000) {
-                        return null;
+
+                    //convert.url = `http://www.tmon.co.kr/deal/${item.dealNo}`;
+
+                    var majorProduct = false;
+                    for (var i = 0; i < traceProducts.length; i++) {
+                        if (convert.title.indexOf(traceProducts[i]) > -1) {
+                            majorProduct = true;
+                        }
                     }
-                } else {
-                    if (item.price <= 10000) {
-                        return null;
+                    if (majorProduct === false) {
+                        if (convert.price <= 88000) {
+                            return null;
+                        }
+                    } else {
+                        if (convert.price <= 10000) {
+                            return null;
+                        }
                     }
-                }
-                for (var i = 0; i < ignoreProducts.length; i++) {
-                    if (item.title.indexOf(ignoreProducts[i]) > -1) {
-                        return null;
+                    for (var i = 0; i < ignoreProducts.length; i++) {
+                        if (convert.title.indexOf(ignoreProducts[i]) > -1) {
+                            return false;
+                        }
                     }
-                }
-                // 판매 종료
-                if (body.html.indexOf('btn_buy_end') > -1) {
-                    item.alive = 0;
-                }
-                // 매진
-                if (body.html.indexOf('btn_soldout2') > -1) {
-                    item.alive = 0;
-                }
-                return item;
-            }).get();
+
+                    return convert;
+                }).filter(function(item) {
+                    return item;
+                });
+                //console.log(result.data.items);
+            }
         }
 
         callback(err, result);
@@ -267,19 +289,17 @@ exports.process = function (main_result, callback) {
                 data: {
                     items: [],
                 },
-                naver_link: "",
-                naver_bridge: "",
+                message: "",
             });
         },
         //requestNaverShoppingSearch,
         //requestNaverShoppingBridge,
         //requestNaverShoppingWemakeprice,
         requestListPage,
-        function (result, callback) {
-            async.eachLimit(result.data.items, 5, parseItem, function (err) {
-                callback(err, result);
-            });
-        },
+        requestDelay,
+        requestListPage,
+        requestDelay,
+        requestListPage,
     ], function (err, result) {
         if (err) {
             console.log(err);

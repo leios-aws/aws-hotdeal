@@ -447,7 +447,7 @@ exports.handler = function (event, context, callback) {
                 message: "",
             });
         },
-        //wemakeprice_giftcard.process,
+        wemakeprice_giftcard.process,
         tmon_giftcard.process,
         elevenst_giftcard.process,
         auction_giftcard.process,
