@@ -192,7 +192,7 @@ var requestListPage = function (result, callback) {
                         }
                     }
 
-                    //convert.url = `http://www.tmon.co.kr/deal/${item.dealNo}`;
+                    convert.url = `https://front.wemakeprice.com/product/${deal.linkInfo}`
 
                     var majorProduct = false;
                     for (var i = 0; i < traceProducts.length; i++) {
