@@ -55,13 +55,14 @@ var requestHappyMoneyPage = function (result, callback) {
         if (!err) {
             var $ = cheerio.load(body);
             var title_element = $('.dt_title > h1');
-            var lower_price_element = $('.prc > b');
+            var lower_price_element = $('.price > .prc > b');
             var price_element = $('.price > del > b');
 
             var item = {};
             item.alive = max_alive;
             item.count = 1000;
             item.url = 'https://www.11st.co.kr/products/2778024489';
+
             if (lower_price_element.text()) {
                 item.lowestPrice = parseInt($(lower_price_element).text().replace(/,/g, ''), 10);
             }
