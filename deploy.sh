@@ -19,14 +19,16 @@ case ${REVISION} in
             aws lambda update-function-code --function-name ${NAME} --zip-file fileb://${NAME}.zip
 	    for RETRY in 1 2 3 4 5
         do
-                STATUS=$(aws lambda publish-version --function-name ${NAME} | jq -r .LastUpdateStatus)
+            sleep 2
+            RESULT=$(aws lambda publish-version --function-name ${NAME})
+            STATUS=$(echo ${RESULT} | jq -r .LastUpdateStatus)
             if [ "${STATUS}" = "Successful" ]
             then
+                echo "STATUS: ${STATUS}"
+                VERSION=$(echo ${RESULT} | jq -r .Version)
                 break
             fi
-            sleep 3
         done
-        VERSION=$(aws lambda publish-version --function-name ${NAME} | jq -r .Version)
         aws lambda update-alias --function-name ${NAME} --function-version ${VERSION} --name service
         ;;
 esac
