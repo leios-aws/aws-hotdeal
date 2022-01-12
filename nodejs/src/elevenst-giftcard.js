@@ -41,7 +41,7 @@ var req = request.defaults({
 
 var requestHappyMoneyPage = function (result, callback) {
     var option = {
-        uri: 'https://www.11st.co.kr/products/2778024489',
+        uri: 'http://m.11st.co.kr/products/m/2778024489',
         method: 'GET',
         json: false
     };
@@ -54,9 +54,9 @@ var requestHappyMoneyPage = function (result, callback) {
         //console.log(body.template);
         if (!err) {
             var $ = cheerio.load(body);
-            var title_element = $('.c_product_info_title > h1');
-            var lower_price_element = $('.price_wrap > li > dl > dd > strong > span.value');
-            var price_element = $('.price_regular > dd > span.value');
+            var title_element = $('.dt_title > h1');
+            var lower_price_element = $('.prc > b');
+            var price_element = $('.price > del > b');
 
             var item = {};
             item.alive = max_alive;
@@ -75,6 +75,7 @@ var requestHappyMoneyPage = function (result, callback) {
             if (item.lowestPrice) {
                 result.data.items.push(item);
             }
+            console.log(item)
         }
         callback(err, result);
     });
@@ -256,7 +257,7 @@ exports.process = function (main_result, callback) {
         requestBooknLifePage,
         requestHappyMoneyListPage,
         requestBooknLifeListPage,
-        requestTrueFriendListPage,
+        //requestTrueFriendListPage,
     ], function (err, result) {
         if (err) {
             console.log(err);
