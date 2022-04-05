@@ -57,6 +57,7 @@ var requestHappyMoneyPage = function (result, callback) {
             var title_element = $('.dt_title > h1');
             var lower_price_element = $('.dt_price > .price > .prc > b');
             var price_element = $('.dt_price > .price > del > b');
+            var price_block = $('.dt_price');
 
             var item = {};
             item.alive = max_alive;
@@ -74,6 +75,7 @@ var requestHappyMoneyPage = function (result, callback) {
                 item.price = parseInt($(price_element).text().replace(/,/g, ''), 10);
             } else {
                 item.price = item.lowestPrice
+                console.log('price not found:', price_block.text());
             }
             item.title = title_element.text().trim();
 
