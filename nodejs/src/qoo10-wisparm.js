@@ -34,15 +34,15 @@ var requestWisparmPage = function (result, callback) {
         if (!err) {
             var $ = cheerio.load(body);
             
-            result.data.items = $('[id^=subtheme] > table').map((index, element) => {
-                var url = $('tbody > tr > td > a', element).attr('href');
+            result.data.items = $('[id^=subtheme] > a').map((index, element) => {
+                var url = $(element).attr('href');
                 if (!url) {
                     return null;
                 }
-                if (url.indexOf('https://www.qoo10.com/gmkt.inc/mobile/special/special.aspx?sid=') !== 0) {
+                if (url.indexOf('https://www.qoo10.com/GMKT.INC/Mobile/WisFarm/WisFarm.aspx?project_no=') !== 0) {
                     return null;
                 }
-                var id = url.replace('https://www.qoo10.com/gmkt.inc/mobile/special/special.aspx?sid=', '');
+                var id = url.replace('https://www.qoo10.com/GMKT.INC/Mobile/WisFarm/WisFarm.aspx?project_no=', '');
 
                 var item = {};
                 item.title = `Qoo10 위시팜 ${id}`;
