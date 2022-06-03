@@ -9,6 +9,7 @@ const gmarket_giftcard = require('./src/gmarket-giftcard.js');
 const gmarket_truefriend = require('./src/gmarket-truefriend.js');
 const cultureland_giftcard = require('./src/cultureland-giftcard.js');
 const qoo10_wisparm = require('./src/qoo10-wisparm.js');
+const daem_event = require('./src/daem-event.js');
 const config = require('config');
 const AWS = require('aws-sdk');
 const commaNumber = require('comma-number');
@@ -448,6 +449,7 @@ exports.handler = function (event, context, callback) {
                 message: "",
             });
         },
+        daem_event.process,
         qoo10_wisparm.process,
         wemakeprice_giftcard.process,
         tmon_giftcard.process,
