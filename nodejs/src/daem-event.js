@@ -64,7 +64,7 @@ exports.process = function (main_result, callback) {
             console.log(err);
         }
         if (callback) {
-            main_result.qoo10 = result.data.items;
+            main_result.daem = result.data.items;
             callback(err, main_result);
         }
     });

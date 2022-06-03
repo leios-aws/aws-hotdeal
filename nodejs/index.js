@@ -300,7 +300,7 @@ var makeReport = function (result, callback) {
         }
     };
 
-    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket, result.auction_truefriend, result.gmarket_truefriend, result.cultureland_giftcard, result.qoo10);
+    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket, result.auction_truefriend, result.gmarket_truefriend, result.cultureland_giftcard, result.qoo10, result.daem);
     //preventDelete = (result.tmon.length == 0 || result.wemakeprice.length == 0);
     preventDelete = result.tmon.length == 0;
     console.log("preventDelete:", preventDelete);
@@ -443,6 +443,7 @@ exports.handler = function (event, context, callback) {
                 auction_truefriend: [],
                 gmarket: [],
                 gmarket_truefriend: [],
+                daem: [],
                 data: {
                     items: [],
                 },
