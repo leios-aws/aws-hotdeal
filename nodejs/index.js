@@ -9,6 +9,7 @@ const gmarket_giftcard = require('./src/gmarket-giftcard.js');
 const gmarket_truefriend = require('./src/gmarket-truefriend.js');
 const cultureland_giftcard = require('./src/cultureland-giftcard.js');
 const qoo10_wisparm = require('./src/qoo10-wisparm.js');
+const daem_event = require('./src/daem-event.js');
 const config = require('config');
 const AWS = require('aws-sdk');
 const commaNumber = require('comma-number');
@@ -299,7 +300,7 @@ var makeReport = function (result, callback) {
         }
     };
 
-    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket, result.auction_truefriend, result.gmarket_truefriend, result.cultureland_giftcard, result.qoo10);
+    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket, result.auction_truefriend, result.gmarket_truefriend, result.cultureland_giftcard, result.qoo10, result.daem);
     //preventDelete = (result.tmon.length == 0 || result.wemakeprice.length == 0);
     preventDelete = result.tmon.length == 0;
     console.log("preventDelete:", preventDelete);
@@ -442,12 +443,14 @@ exports.handler = function (event, context, callback) {
                 auction_truefriend: [],
                 gmarket: [],
                 gmarket_truefriend: [],
+                daem: [],
                 data: {
                     items: [],
                 },
                 message: "",
             });
         },
+        daem_event.process,
         qoo10_wisparm.process,
         wemakeprice_giftcard.process,
         tmon_giftcard.process,
