@@ -99,6 +99,10 @@ var requestListPage = function (result, callback) {
                     item.lowestPrice = item.price;
                 })
 
+                if (item.url.startsWith("http://adgate")) {
+                    return null;
+                }
+
                 if (!item.price) {
                     return null;
                 }
