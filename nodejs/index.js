@@ -306,7 +306,7 @@ var makeReport = function (result, callback) {
     console.log("preventDelete:", preventDelete);
 
     result.data.items = result.data.items.filter(function(item) {
-        return item.alive > 0;
+        return item && item.alive > 0;
     });
 
     console.log("Making Report");
@@ -451,14 +451,11 @@ exports.handler = function (event, context, callback) {
             });
         },
         daem_event.process,
-        qoo10_wisparm.process,
         wemakeprice_giftcard.process,
         tmon_giftcard.process,
         elevenst_giftcard.process,
         auction_giftcard.process,
-        //auction_truefriend.process,
         gmarket_giftcard.process,
-        //gmarket_truefriend.process,
         cultureland_giftcard.process,
         makeReport,
         saveReport,
