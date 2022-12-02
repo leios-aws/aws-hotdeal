@@ -146,6 +146,98 @@ var requestListPage = function (result, callback) {
     });
 };
 
+var requestListPage2 = function (result, callback) {
+    if (result.data.items2.length > 0) {
+        console.log("Skip retry...");
+        callback(null, result);
+        return;
+    }
+    var option = {
+        uri: 'http://www.tmon.co.kr/api/direct/v1/categorylistapi/api/strategy/filter/80000000/deals',
+        method: 'GET',
+        json: true,
+        qs: {
+            _: Date.now(),
+            platform: 'PC_WEB',
+            sortType: 'POPULAR'
+        }
+    };
+
+    req(option, function (err, response, body) {
+        result.response = response;
+        result.body = body;
+
+        console.log("Parsing Item List: tmon");
+        if (!err) {
+            if (body && body.data && body.data.items) {
+                result.data.items2 = body.data.items.map(function(item, index) {
+                    var convert = {};
+                    if (item.titleName) {
+                        convert.title = item.titleName;
+                    } else if (item.titleDesc) {
+                        convert.title = item.titleDesc;
+                    } else if (item.title) {
+                        convert.title = item.title;
+                    } else {
+                        return false;
+                    }
+
+                    convert.price = item.priceInfo.price;
+                    convert.lowestPrice = convert.price;
+                    convert.alive = max_alive;
+                    convert.count = 1000;
+
+                    if (item.discountPrice) {
+                        if (convert.lowestPrice > item.discountPrice.price) {
+                            convert.lowestPrice = item.discountPrice.price;
+                        }
+                        if (convert.lowestPrice > item.discountPrice.tmonPrice) {
+                            convert.lowestPrice = item.discountPrice.tmonPrice;
+                        }
+                        if (convert.lowestPrice > item.discountPrice.originalPrice) {
+                            convert.lowestPrice = item.discountPrice.originalPrice;
+                        }
+                    }
+
+                    convert.url = `http://www.tmon.co.kr/deal/${item.dealNo}`;
+
+                    var majorProduct = false;
+                    for (var i = 0; i < traceProducts.length; i++) {
+                        if (convert.title.indexOf(traceProducts[i]) > -1) {
+                            majorProduct = true;
+                        }
+                    }
+                    if (majorProduct === false) {
+                        if (convert.price <= 88000) {
+                            return null;
+                        }
+                    } else {
+                        if (convert.price <= 10000) {
+                            return null;
+                        }
+                    }
+                    for (var i = 0; i < ignoreProducts.length; i++) {
+                        if (convert.title.indexOf(ignoreProducts[i]) > -1) {
+                            return false;
+                        }
+                    }
+                    // 판매 종료
+                    if (item.isClosed || item.isPause || (item.dealMax && item.dealMax.soldOut)) {
+                        convert.alive = 0;
+                    }
+                    console.log(convert);
+                    return convert;
+                }).filter(function(item) {
+                    return item;
+                });
+                //console.log(result.data.items);
+            }
+        }
+
+        callback(err, result);
+    });
+};
+
 exports.process = function (main_result, callback) {
     now = Math.floor(Date.now() / 1000);
 
@@ -154,6 +246,7 @@ exports.process = function (main_result, callback) {
             callback(null, {
                 data: {
                     items: [],
+                    items2: [],
                 },
                 message: "",
             });
@@ -163,12 +256,17 @@ exports.process = function (main_result, callback) {
         requestListPage,
         requestDelay,
         requestListPage,
+        requestListPage2,
+        requestDelay,
+        requestListPage2,
+        requestDelay,
+        requestListPage2,
     ], function (err, result) {
         if (err) {
             console.log(err);
         }
         if (callback) {
-            main_result.tmon = result.data.items;
+            main_result.tmon = [].concat(result.data.items, result.data.items2);
             callback(err, main_result);
         }
     });
