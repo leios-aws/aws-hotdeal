@@ -444,6 +444,7 @@ exports.handler = function (event, context, callback) {
                 gmarket: [],
                 gmarket_truefriend: [],
                 daem: [],
+                qoo10: [],
                 data: {
                     items: [],
                 },
@@ -451,6 +452,7 @@ exports.handler = function (event, context, callback) {
             });
         },
         //daem_event.process,
+        qoo10_wisparm.process,
         wemakeprice_giftcard.process,
         tmon_giftcard.process,
         //elevenst_giftcard.process,
