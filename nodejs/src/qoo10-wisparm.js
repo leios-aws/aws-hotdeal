@@ -40,13 +40,16 @@ var requestWisparmPage = function (result, callback) {
                     return null;
                 }
                 var id = $("a.sbj", element).attr("title")
-
+                var progress = Math.floor(parseFloat($(".wisfarm-graph__label > text > tspan", element).html().replace(/%/g, '')) / 5);
+                if (progress < 16) {
+                    return null;
+                }
                 var item = {};
                 item.title = `Qoo10 위시팜: ${id}`;
                 item.alive = max_alive;
-                item.count = 1000;
+                item.count = 100;
                 item.url = url;
-                item.lowestPrice = 100;
+                item.lowestPrice = progress*5;
                 item.price = 100;
 
                 return item;
