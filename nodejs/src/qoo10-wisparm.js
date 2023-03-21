@@ -49,8 +49,8 @@ var requestWisparmPage = function (result, callback) {
                 item.alive = max_alive;
                 item.count = 100;
                 item.url = url;
-                item.lowestPrice = progress*5;
-                item.price = 100;
+                item.lowestPrice = 10000 - (progress*5 * 100);
+                item.price = 10000;
 
                 return item;
 
