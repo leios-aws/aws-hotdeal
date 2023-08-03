@@ -37,7 +37,7 @@ var requestSearchPage = function (result, callback) {
         if (!err && body.data && body.returnStatus && body.data && body.data.dataList) {
             if  (body.returnStatus === 200) {
                 for (var i = 0; i < body.data.dataList.length; i++) {
-                    if (body.data.dataList[i].itemNm.indexOf("보리먹고 자란 돼지") === 0) {
+                    if (body.data.dataList[i].itemNm.indexOf("보리먹고 자란 돼지") === 0 && body.data.dataList[i].itemSoldOutYn !== "Y") {
                         var item = {};
                         item.title = body.data.dataList[i].itemNm;
                         item.alive = max_alive;
