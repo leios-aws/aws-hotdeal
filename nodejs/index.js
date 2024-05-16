@@ -11,6 +11,7 @@ const cultureland_giftcard = require('./src/cultureland-giftcard.js');
 const qoo10_wisparm = require('./src/qoo10-wisparm.js');
 const daem_event = require('./src/daem-event.js');
 const homeplus = require('./src/homeplus.js');
+const naverstore_nulook = require('./src/naverstore-nulook.js');
 const config = require('config');
 const AWS = require('aws-sdk');
 const commaNumber = require('comma-number');
@@ -301,7 +302,7 @@ var makeReport = function (result, callback) {
         }
     };
 
-    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket, result.auction_truefriend, result.gmarket_truefriend, result.cultureland_giftcard, result.qoo10, result.daem, result.homeplus);
+    result.data.items = [].concat(result.tmon, result.wemakeprice, result.elevenst, result.auction, result.gmarket, result.auction_truefriend, result.gmarket_truefriend, result.cultureland_giftcard, result.qoo10, result.daem, result.homeplus, result.naverstore);
     //preventDelete = (result.tmon.length == 0 || result.wemakeprice.length == 0);
     preventDelete = result.tmon.length == 0;
     console.log("preventDelete:", preventDelete);
@@ -437,6 +438,7 @@ exports.handler = function (event, context, callback) {
     async.waterfall([
         function(callback) {
             callback(null, {
+                naverstore: [],
                 wemakeprice: [],
                 tmon: [],
                 elevenst: [],
@@ -454,6 +456,7 @@ exports.handler = function (event, context, callback) {
             });
         },
         //daem_event.process,
+        naverstore_nulook.process,
         qoo10_wisparm.process,
         wemakeprice_giftcard.process,
         tmon_giftcard.process,
