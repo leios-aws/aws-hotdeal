@@ -5,26 +5,6 @@ const async = require('async');
 
 var now;
 var max_alive = 2;
-var traceProducts = [
-    "컬쳐랜드",
-    "해피머니 온라인상품권",
-    "도서문화상품권",
-    "롯데",
-    "신세계",
-    "머니트리",
-];
-
-var ignoreProducts = [
-    "정관장",
-    "아이템매니아",
-    "예스24",
-    "엔터식스",
-    "대한문고 교환권",
-    "CGV기프트카드",
-    "(롯데마트)",
-    "(하이마트)",
-    "아프리카",
-];
 
 var req = request.defaults({
     headers: {
@@ -70,6 +50,7 @@ var requestProductListPage = function (result, callback) {
                 item.price = parseInt($(price_element).text().replace(/,/g, ''), 10);
                 item.lowestPrice = item.price;
 
+                console.log(item.title);
                 if (!item.price) {
                     return null;
                 }
