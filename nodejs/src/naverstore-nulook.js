@@ -33,7 +33,7 @@ var requestProductListPage = function (result, callback) {
         result.body = body;
 
         //console.log(body.totalCount);
-        //console.log(body.template);
+        console.log(body.toString());
         if (!err) {
             var $ = cheerio.load(body);
             result.data.items = $('.V_RECT').map((index, element) => {
