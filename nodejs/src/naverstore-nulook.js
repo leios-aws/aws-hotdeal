@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 const async = require('async');
 
 var now;
-var max_alive = 2;
+var max_alive = 100;
 
 var req = request.defaults({
     headers: {
