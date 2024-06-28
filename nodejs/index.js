@@ -457,7 +457,7 @@ exports.handler = function (event, context, callback) {
         },
         //daem_event.process,
         naverstore_nulook.process,
-        qoo10_wisparm.process,
+        //qoo10_wisparm.process,
         wemakeprice_giftcard.process,
         tmon_giftcard.process,
         //elevenst_giftcard.process,
